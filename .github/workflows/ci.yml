@@ -1,0 +1,43 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  tests:
+    name: Python tests
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ["3.10", "3.11", "3.12"]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - run: pip install pytest
+      - name: Run tests
+        working-directory: python
+        run: pytest -q
+      - name: Reproduce the portfolio's volatility results
+        working-directory: python
+        run: python reproduce.py
+
+  pdf:
+    name: Build the portfolio PDF
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Compile src/main.tex
+        uses: xu-cheng/latex-action@v3
+        with:
+          root_file: main.tex
+          working_directory: src
+          latexmk_use_xelatex: false
+      - uses: actions/upload-artifact@v4
+        with:
+          name: MATH_476_Portfolio
+          path: src/main.pdf

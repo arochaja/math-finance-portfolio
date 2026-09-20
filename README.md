@@ -1,5 +1,9 @@
 # Portfolio of Financial Derivatives & Options
 
+[![CI](https://github.com/arochaja/math-finance-portfolio/actions/workflows/ci.yml/badge.svg)](https://github.com/arochaja/math-finance-portfolio/actions/workflows/ci.yml)
+[![LaTeX](https://img.shields.io/badge/built%20with-LaTeX-008080)](src/main.tex)
+[![License: CC BY 4.0](https://img.shields.io/badge/license-CC%20BY%204.0-lightgrey)](LICENSE)
+
 A worked portfolio of **115+ exercises** in mathematical finance — from forward-contract
 payoffs through risk-neutral binomial pricing, a from-scratch derivation of the
 Black–Scholes formula, volatility estimation, and linear programming.
@@ -43,6 +47,45 @@ TikZ/pgfplots payoff diagrams, and numerical results.
 
 ---
 
+## The Python companion
+
+The volatility exercises were originally computed in a Colab notebook. `python/`
+reimplements that work as a small, dependency-free library so the results in the
+PDF can be checked by anyone who clones the repo.
+
+```bash
+cd python
+python3 reproduce.py          # recompute the Volatility Exercises
+pip install pytest && pytest  # 14 tests
+```
+
+| File | What it holds |
+|---|---|
+| `finmath.py` | Black-Scholes call and put prices, `d1`/`d2`, put-call parity, log returns, historical volatility, implied volatility by bisection |
+| `data.py` | The price series and parameters used by the Volatility Exercises |
+| `reproduce.py` | Recomputes each stated result and prints it beside the value in the PDF |
+| `test_finmath.py` | Parity, no-arbitrage bounds, monotonicity in sigma, implied-vol round-trip, and the portfolio's own figures |
+
+`reproduce.py` output:
+
+```
+quantity                                     computed        in PDF   match
+---------------------------------------------------------------------------
+Ex 1  historical vol, 15 weekly closes       0.207940      0.207940   yes
+Ex 2  implied vol from a $2.50 call          0.396436      0.396436   yes
+Ex 3  historical vol, DASH daily closes      0.214646      0.097504   NO
+Ex 4c call price at sigma = 5               51.333093     64.006700   NO
+```
+
+The two mismatches are errata in the written solutions, and the script explains
+both: Exercise 3 annualizes a *daily* series, so the scaling factor is
+$\sqrt{252}$ rather than the $\sqrt{52}$ carried over from Exercise 1; and the
+Exercise 4(c) price corresponds to $T \approx 0.0596$, not the stated
+$T = 0.01$, for which the correct price is \$51.33. Neither changes the
+conclusion of the exercise.
+
+---
+
 ## Repository layout
 
 ```
@@ -52,6 +95,7 @@ TikZ/pgfplots payoff diagrams, and numerical results.
 │   ├── main.tex             # the portfolio source (~4,600 lines)
 │   ├── course-notes.tex     # course notes / problem statements (reference)
 │   └── figures/             # diagrams, plots, and computed output
+├── python/                  # Black-Scholes and volatility code, with tests
 └── LICENSE
 ```
 
@@ -70,12 +114,6 @@ The second pass is needed for cross-references and hyperlinks. `main.tex` sets
 > `course-notes.tex` is the instructor's source for the problem statements, kept for
 > reference. It will not compile as-is — several of its figures were not distributed
 > with the original materials.
-
-## Numerical work
-
-The volatility exercises were computed in Python (historical volatility, Black–Scholes
-pricing, and implied volatility by numerical root-finding). The notebook is linked from
-the Volatility Exercises section of the PDF.
 
 ---
 

@@ -16,3 +16,13 @@
 *.vrb
 *.auxlock
 build/
+
+# Python
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.venv/
+venv/
+
+# Personal documents kept alongside the project but not published
+*Resume*.pdf
