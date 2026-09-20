@@ -110,6 +110,8 @@ pdflatex main.tex && pdflatex main.tex   # run twice to resolve references
 
 The second pass is needed for cross-references and hyperlinks. `main.tex` sets
 `\graphicspath{{figures/}{./}}`, so it must be compiled from inside `src/`.
+GitHub Actions rebuilds the PDF from source on every push and attaches it to the
+run as an artifact, so the committed PDF and the LaTeX source cannot drift apart.
 
 > `course-notes.tex` is the instructor's source for the problem statements, kept for
 > reference. It will not compile as-is — several of its figures were not distributed
